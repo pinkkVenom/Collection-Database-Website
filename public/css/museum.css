@@ -1,0 +1,354 @@
+.image-wrapper {
+  width: 100%;
+  aspect-ratio: 2 / 3; /* or 1/1 for albums if you want square */
+  overflow: hidden;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-wrapper.square {
+  aspect-ratio: 1 / 1;
+  margin-top: 30%;
+}
+
+/* Images inside container */
+.image-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* ensures image fills container without distortion */
+  display: block;
+  border-radius: 10px;
+}
+
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+  background-color: #fafafa;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+}
+
+.controls select {
+  padding: 0.5rem 0.75rem;
+  font-size: 0.9rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  background-color: white;
+  min-width: 180px;
+  cursor: pointer;
+}
+
+.controls select:focus {
+  outline: none;
+  border-color: #111;
+}
+
+.empty-state {
+  text-align: center;
+  color: #777;
+  font-size: 0.95rem;
+  padding: 2rem 0;
+}
+
+.item-card {
+  background: #f075a848;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  border-radius: 14px;
+  margin: 5px;
+  gap: 0.2rem;
+  padding: 1rem;
+  transition: transform 0.2s;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+}
+
+.item-card h3 {
+  font-size: 1.1rem;
+  margin: 0.5rem 0;
+}
+
+.item-card p {
+  font-size: 0.9rem;
+}
+
+.notes {
+  font-size: 0.9rem;
+  color: #333;
+  white-space: pre-wrap; /* keeps line breaks from DB notes */
+}
+
+.item-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
+  transition: all 0.2s ease;
+}
+
+.museum-grid{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 1rem;
+}
+
+.tabs {
+  display: flex;
+  gap: 0.75rem;
+  margin: 1.5rem 0 1rem;
+}
+
+.tab {
+  background: transparent;
+  border: 1px solid #ddd;
+  padding: 0.6rem 1.25rem;
+  font-size: 0.95rem;
+  border-radius: 999px;
+  cursor: pointer;
+  color: #444;
+  transition: all 0.2s ease;
+}
+
+.tab:hover {
+  background-color: #f2f2f2;
+}
+
+.tab.active {
+  background-color: #111;
+  color: white;
+  border-color: #111;
+}
+
+.tab-content {
+  display: none;
+}
+
+.tab-content.active {
+  display: block;
+}
+
+.filters {
+  display: flex;
+  gap: 1rem;
+}
+
+.filters select {
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.main-text {
+  text-align: center;
+}
+
+.title-text {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2f1d2b;
+}
+
+.sub-text {
+  margin: 5px;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: #856a7f;
+}
+
+.text-meta {
+  margin-top: 0.75rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.6rem 2rem; /* more vertical + horizontal space */
+  font-size: 0.75rem;
+}
+
+.text-meta div {
+  padding-bottom: 0.25rem;
+  border-bottom: 1px dashed rgba(0,0,0,0.06);
+}
+
+.text-meta span:first-child {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: #8f7d89;
+}
+
+.text-meta span:last-child {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: #2f1d2b;
+  background: rgba(0,0,0,0.04);
+  padding: 0.15rem 0.45rem;
+  border-radius: 6px;
+  max-width: 100%;
+  word-break: break-word;
+  white-space: normal;
+}
+
+.text-meta .highlight {
+  font-weight: 600;
+  color: #af0e5c;
+  background: rgba(175, 14, 92, 0.08);
+}
+
+.pc-flip-card {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  perspective: 1000px;
+  position: relative; /* REQUIRED */
+}
+
+.pc-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.7s ease;
+  transform-style: preserve-3d;
+  cursor: pointer;
+}
+
+.pc-flip-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+/* Disable flipping when no back image */
+.pc-flip-inner.no-flip {
+  cursor: default;
+}
+
+.pc-front,
+.pc-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+}
+
+.pc-front img,
+.pc-back img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.pc-back {
+  transform: rotateY(180deg);
+}
+
+.pc-back-placeholder {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  background: repeating-linear-gradient(
+    45deg,
+    #f2f2f2,
+    #f2f2f2 10px,
+    #e6e6e6 10px,
+    #e6e6e6 20px
+  );
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.pc-back-placeholder span {
+  font-size: 0.8rem;
+  color: #777;
+  font-style: italic;
+  padding: 0.5rem;
+}
+
+.pc-flip-inner:not(.no-flip):hover {
+  scale: 1.02;
+}
+
+.pc-flip-card::after {
+  content: "↺";
+  position: absolute;
+  bottom: 8px;
+  right: 10px;
+  font-size: 0.8rem;
+  opacity: 0.6;
+}
+
+
+.rarity-badge {
+  display: inline-block;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-top: 0.4rem;
+}
+
+.rarity-bronze {
+  background: #e2b091;
+  color: #5b2e1b;
+}
+
+.rarity-silver {
+  background: #e6e6ea;
+  color: #4a4a4a;
+}
+
+.rarity-gold {
+  background: linear-gradient(135deg, #f5d77a, #f1c232);
+  color: #5c4500;
+}
+
+.rarity-platinum {
+  background: linear-gradient(135deg, #d6e9f2, #b8d6e8);
+  box-shadow: 0 0 8px rgba(184, 214, 232, 0.5);
+  color: #1f3d4a;
+}
+
+.rarity-diamond {
+  background: linear-gradient(135deg, #e8d9ff, #c9b6ff);
+  box-shadow: 0 0 10px rgba(201, 182, 255, 0.6);
+  color: #3b1f6b;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 152px;
+  padding: 8px 12px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+
+@media (max-width: 900px) {
+  .text-meta div {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+}
+
+@media (max-width: 900px) {
+  .text-meta span:last-child {
+    background: rgba(0,0,0,0.03);
+    padding: 0.2rem 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .rarity-badge {
+    font-size: 0.65rem;
+    padding: 0.25rem 0.6rem;
+  }
+}

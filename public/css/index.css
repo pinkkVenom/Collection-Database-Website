@@ -1,0 +1,141 @@
+.intro-text h2 {
+  margin-bottom: 1rem;
+  color: #2f1d2b;
+}
+
+.intro-text p {
+  color: #443e3e;
+  line-height: 1.5;
+}
+
+.intro-section {
+  margin: 3rem 0;
+  display: flex;
+  justify-content: center;
+}
+
+.intro-card {
+  max-width: 900px;
+  background: #fff;
+  padding: 2.5rem;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  text-align: center;
+}
+
+.intro-card h2 {
+  font-size: 1.8rem;
+  margin-bottom: 1rem;
+  color: #2f1d2b;
+}
+
+.intro-card p {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #443e3e;
+  margin-bottom: 1rem;
+}
+
+.section-divider {
+  width: 80px;
+  height: 4px;
+  background: #af0e5c;
+  border-radius: 999px;
+  margin: 2rem auto;
+}
+
+
+/* Gallery styling */
+.gallery-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  flex-shrink: 0;
+  margin: 0 0.7rem; /* 1rem total between items */
+  opacity: 0.5;
+  transform: scale(0.95);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.gallery-item.active img{
+  transform: scale(1.05);
+}
+
+.gallery-item.active{
+  opacity: 1;
+}
+
+.gallery-item figcaption {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #6a5a67;
+  letter-spacing: 0.03em;
+}
+
+
+.image-gallery {
+  display: flex;
+  will-change: transform;
+  align-items: center;
+}
+
+.image-gallery img {
+  width: 350px;
+  height: 250px;           /* 🔑 no forced crop */
+  object-fit:cover;   /* 🔑 prevents cropping */
+  flex-shrink: 0;
+  border-radius: 17px;
+  background: #eee;      /* nice fallback */
+  transition: transform 0.5s ease;
+}
+
+.image-gallery-wrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+.image-gallery img:hover {
+  transform: scale(1.05);
+  cursor: pointer;
+}
+
+.home-gallery {
+  width: 100%;
+  margin: 2rem 0;
+  position: relative;
+}
+
+.gallery-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 5%;
+}
+
+.arrow {
+  background-color: #111;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  z-index: 2;
+  transition: background 0.2s;
+}
+
+.arrow:hover {
+  background-color: #444;
+}
+
+.left-arrow {
+  margin-right: 0.5rem;
+}
+
+.right-arrow {
+  margin-left: 0.5rem;
+}

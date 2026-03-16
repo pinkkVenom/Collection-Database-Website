@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>K-Pop Collection Museum</title>
+    <link rel="stylesheet" href="/css/museum.css">
+    <link rel="stylesheet" href="/css/navbar.css">
+    <link rel="stylesheet" href="/css/header.css">
+</head>
+<body>
+
+<header class="page-header">
+  <h1>My K-Pop Collection</h1>
+  <p class="subtitle">Welcome to the museum</p>
+</header>
+
+<nav class="main-nav">
+  <a href="add-item.html" class="primary">➕ Add New Item</a>
+  <a href="edit-item.html">Edit Item</a>
+  <a href="index.html">Back</a>
+</nav>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="overviewTab">Overview</button>
+    <button class="tab" data-tab="itemsTab">Albums</button>
+    <button class="tab" data-tab="photocardsTab">Photocards</button>
+  </div>
+
+    <!-- Overview / Random display -->
+  <section id="overviewTab" class="tab-content active">
+    <div id="overviewGrid" class="museum-grid"></div>
+  </section>
+
+    <!-- Albums Tab -->
+  <section id="itemsTab" class="tab-content">
+    <div class="controls">
+        <select id="itemTypeFilter">
+        <option value="all">All Types</option>
+        <option value="standard cd">Standard CD</option>
+        <option value="standard cd nk">Standard CD Non-Korean</option>
+        <option value="limited cd">Limited CD</option>
+        <option value="japanese release">Japanese Release</option>
+        <option value="digital album">Digital Album</option>
+        <option value="vinyl">Vinyl</option>
+        <option value="cassette">Cassette</option>
+        <option value="bimae">Promo/NFS</option>
+        <option value="gold sticker">Gold KOMCA</option>
+        <option value="merch">Merch/Special</option> 
+        <option value="standard dvd">Standard DVD</option>
+        <option value="standard bluray">Standard Bluray</option>    
+        <!-- add more -->
+        </select>
+
+        <select id="itemGroupFilter">
+        <option value="all">All Groups</option>
+        </select>
+        <input
+          type="number"
+          id="itemIdSearch"
+          placeholder="Search album by ID..."
+          class="search-input"
+        />
+    </div>
+
+    <div id="itemsGrid" class="museum-grid"></div>
+  </section>
+
+    <!-- Photocards Tab -->
+  <section id="photocardsTab" class="tab-content">
+    <div class="controls">
+        <select id="pcGroupFilter">
+        <option value="all">All Groups</option>
+        </select>
+        <select id="pcMemberFilter">
+        <option value="all">All Members</option>
+        </select>
+
+        <input
+          type="number"
+          id="pcIdSearch"
+          placeholder="Search photocard by ID..."
+          class="search-input"
+        />
+    </div>
+
+    <div id="photocardsGrid" class="museum-grid"></div>
+  </section>
+
+<script src="/js/museum.js"></script>
+</body>
+
+  <footer class="main-footer">
+    <p>© 2025 K-Pop Collection Museum</p>
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="museum.html">Museum</a>
+      <a href="add-item.html">Add Item</a>
+    </nav>
+  </footer>
+</html>

@@ -1,0 +1,39 @@
+body {
+  background: #f7f4f6;
+  color: #333;
+}
+
+.page-header {
+  padding: 3rem 2rem 2.5rem;
+  background: linear-gradient(
+    180deg,
+    #faf7f9 0%,
+    #f3edf2 100%
+  );
+  border-bottom: 1px solid #e6dfe6;
+  text-align: center;
+}
+
+.page-header h1 {
+  margin: 0;
+  font-size: 2.2rem;
+  font-weight: 600;
+  color: #2f1d2b;
+  letter-spacing: 0.5px;
+}
+
+.page-header .subtitle {
+  margin-top: 0.75rem;
+  font-size: 1rem;
+  color: #6a5a67;
+}
+
+@media (max-width: 600px) {
+  .page-header h1 {
+    font-size: 1.7rem;
+  }
+
+  .page-header {
+    padding: 2rem 1.5rem;
+  }
+}
