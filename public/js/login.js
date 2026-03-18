@@ -1,3 +1,6 @@
+// -------------------------
+//handles login form submission page
+// -------------------------
 document.getElementById("loginForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -11,7 +14,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
   });
 
   if (res.ok) {
-    window.location.href = "/add-item.html";
+    window.location.href = "/index.html";
   } else {
     alert("Login failed");
   }

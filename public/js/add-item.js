@@ -2,6 +2,9 @@ const categorySelect = document.getElementById("categorySelect");
 const itemForm = document.getElementById("itemForm");
 const photocardForm = document.getElementById("photocardForm");
 
+// -------------------------
+//hides certain form type based on which item type youre adding to database
+// -------------------------
 categorySelect.addEventListener("change", () => {
   itemForm.classList.add("hidden");
   photocardForm.classList.add("hidden");
@@ -15,8 +18,9 @@ categorySelect.addEventListener("change", () => {
   }
 });
 
-
-//submit to items
+// -------------------------
+//submit to items API
+// -------------------------
 itemForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -33,7 +37,9 @@ itemForm.addEventListener("submit", async (e) => {
   alert("Item added!");
 });
 
-//submit to photocards
+// -------------------------
+//submit to photocards API
+// -------------------------
 photocardForm.addEventListener("submit", async (e) => {
   e.preventDefault();
 
@@ -50,5 +56,6 @@ photocardForm.addEventListener("submit", async (e) => {
   alert("Photocard added!");
 });
 
+//temp
 //DELETE FROM ownedPhotocards;
 //DELETE FROM sqlite_sequence WHERE name='ownedPhotocards';

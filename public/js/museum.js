@@ -1,4 +1,4 @@
-//For Google Drive
+//For Images
 //PHOTO NAMING FORMAT:
 //CamelCase for longer entries
 //ALBUM: albumname-version-front/back
@@ -27,9 +27,11 @@ const photocardFilterState = {
 let itemIdSearchTerm = "";
 let pcIdSearchTerm = "";
 
+// -------------------------
+//formatting for item information
+// -------------------------
 function formatLabel(value) {
   if (!value) return "";
-
   return value
     .replace(/_/g, " ")                 // underscores → spaces
     .replace(/\b\w/g, char => char.toUpperCase()); // capitalize first letter of each word
@@ -44,8 +46,9 @@ function getRarityClass(rarity) {
   return `rarity-${rarity.toLowerCase()}`;
 }
 
-
+// -------------------------
 //gets all data at once
+// -------------------------
 async function loadData() {
   const [itemsRes, pcsRes] = await Promise.all([
     fetch("/api/ownedItems"),
@@ -59,6 +62,9 @@ async function loadData() {
   populatePhotocardFilters();
 }
 
+// -------------------------
+//rendering/loading active tab
+// -------------------------
 function renderInitialTab() {
   const activeTab = document.querySelector(".tab.active");
 
@@ -84,6 +90,9 @@ function renderInitialTab() {
   }
 }
 
+// -------------------------
+//change active tab based on which button the user clicks
+// -------------------------
 function setupTabListeners() {
   tabs.forEach(tab => {
     tab.addEventListener("click", () => {
@@ -99,14 +108,18 @@ function setupTabListeners() {
 }
 
 
-
+// -------------------------
+//MUSEUM PAGE INITIALIZATION
+// -------------------------
 async function initMuseum() {
   await loadData();
   renderInitialTab();
   setupTabListeners();
 }
 
+// -------------------------
 //random mix for Overview
+// -------------------------
 function renderOverview() {
   const grid = document.getElementById("overviewGrid");
   grid.innerHTML = "";
@@ -151,7 +164,9 @@ function renderOverview() {
   });
 }
 
+// -------------------------
 //retrieve album filters
+// -------------------------
 let allItems = [];
 
 function populateItemFilters() {
@@ -262,8 +277,9 @@ function applyItemFilters() {
   renderItems(filtered);
 }
 
-
+// -------------------------
 //retrieve photocard filters
+// -------------------------
 let allPhotocards = [];
 
 function populatePhotocardFilters() {
@@ -354,7 +370,12 @@ function renderPhotocards(cards) {
   });
 }
 
-
+// -------------------------
+//handlers for filtering
+//(filtering by group, member)
+//(id search function)
+//(photocard flips when clicked so you can see the back)
+// -------------------------
 document.getElementById("pcGroupFilter").addEventListener("change", e => {
   photocardFilterState.artist_name = e.target.value;
   applyPhotocardFilters();
@@ -378,6 +399,9 @@ document.addEventListener('click', (e) => {
   flipInner.classList.toggle('flipped');
 });
 
+// -------------------------
+//apply filters to webpage
+// -------------------------
 function applyPhotocardFilters() {
   let filtered = [...allPhotocards];
 

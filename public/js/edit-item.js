@@ -109,7 +109,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // -------------------------
-  // Helpers
+  // Helper Functions
   // -------------------------
   function hideAllForms() {
     photocardForm.classList.add("hidden");
@@ -128,7 +128,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // -------------------------
-// Submit handlers
+// Form submission (updates the database with your edits)
 // -------------------------
 photocardForm.addEventListener("submit", e => {
   e.preventDefault();

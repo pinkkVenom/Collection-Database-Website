@@ -2,12 +2,18 @@ const gallery = document.getElementById("imageGallery");
 const leftArrow = document.querySelector(".left-arrow");
 const rightArrow = document.querySelector(".right-arrow");
 
+// -------------------------
+//global variables for image carousel
+// -------------------------
 let isMoving = false;
 const CLONE_COUNT = 3;
 let index = CLONE_COUNT;
 let slideWidth = 0;
 let wrapperWidth = 0;
 
+// -------------------------
+//IMAGE CAROUSEL
+// -------------------------
 const images = [
   {
     src: "https://people.com/thmb/JeX3Zm0C8LpUeM12Oa3LzQS6snI=/1500x0/filters:no_upscale():max_bytes(150000):strip_icc():focal(764x229:766x231)/Blackpink-2023-members-01-9d67ffe25a474456b4be77adedb057b0.jpg",
@@ -91,7 +97,9 @@ const images = [
   }
 ];
 
-/* ---------- helpers ---------- */
+// -------------------------
+//helper functions
+// -------------------------
 function addImage({ src, caption }) {
   const figure = document.createElement("figure");
   figure.className = "gallery-item";
@@ -127,7 +135,9 @@ function getTranslateXForIndex(i) {
 }
 
 
-/* ---------- init ---------- */
+// -------------------------
+//carousel initialization
+// -------------------------
 function initCarousel() {
   gallery.innerHTML = "";
 
@@ -149,9 +159,11 @@ function initCarousel() {
 }
 
 
-
 initCarousel();
 
+// -------------------------
+//carousel movement function
+// -------------------------
 function move(direction) {
   if (isMoving) return;
   isMoving = true;
@@ -165,8 +177,9 @@ function move(direction) {
   updateActiveClass();
 }
 
-
-
+// -------------------------
+//function handling image transition
+// -------------------------
 gallery.addEventListener("transitionend", () => {
   const total = images.length;
 
@@ -191,7 +204,9 @@ gallery.addEventListener("transitionend", () => {
 });
 
 
-
+// -------------------------
+//updates the active image in the carousel
+// -------------------------
 function updateActiveClass() {
   const items = gallery.querySelectorAll(".gallery-item");
 
@@ -202,10 +217,15 @@ function updateActiveClass() {
 }
 
 
-
+// -------------------------
+//listeners for button clicking in carousel
+// -------------------------
 rightArrow.addEventListener("click", () => move(1));
 leftArrow.addEventListener("click", () => move(-1));
 
+// -------------------------
+//change image sizes based on which image is active in the carousel
+// -------------------------
 window.addEventListener("resize", () => {
   updateSlideWidth();
 
