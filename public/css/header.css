@@ -1,5 +1,5 @@
 body {
-  background: #f7f4f6;
+  background: #473441;
   color: #333;
 }
 
@@ -8,9 +8,9 @@ body {
   background: linear-gradient(
     180deg,
     #faf7f9 0%,
-    #f3edf2 100%
+    #81416c 100%
   );
-  border-bottom: 1px solid #e6dfe6;
+
   text-align: center;
 }
 

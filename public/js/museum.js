@@ -15,13 +15,15 @@ const tabs = document.querySelectorAll(".tab");
 const tabContents = document.querySelectorAll(".tab-content");
 
 const albumFilterState = {
-  itemType: "all",
-  artist_name: "all"
+  item_type: "all",
+  artist_name: "all",
+  nameSearch: ""
 };
 
 const photocardFilterState = {
   artist_name: "all",
-  member: "all"
+  member: "all",
+  nameSearch: ""
 };
 
 let itemIdSearchTerm = "";
@@ -171,10 +173,18 @@ let allItems = [];
 
 function populateItemFilters() {
   const groupSelect = document.getElementById("itemGroupFilter");
-  
-  const groups = [...new Set(allItems.map(i => i.artist_name).filter(Boolean))].sort();
 
-  groups.forEach(g => groupSelect.appendChild(new Option(g, g)));
+  groupSelect.innerHTML = `<option value="all">All Artists</option>`;
+
+  const groups = [...new Set(
+    allItems
+      .map(i => i.artist_name)
+      .filter(Boolean)
+  )].sort();
+
+  groups.forEach(g => {
+    groupSelect.appendChild(new Option(g, g));
+  });
 }
 
 function renderItems(items) {
@@ -235,7 +245,7 @@ function renderItems(items) {
 }
 
 document.getElementById("itemTypeFilter").addEventListener("change", e => {
-  albumFilterState.itemType = e.target.value;
+  albumFilterState.item_type = e.target.value;
   applyItemFilters();
 });
 
@@ -249,13 +259,19 @@ document.getElementById("itemIdSearch").addEventListener("input", e => {
   applyItemFilters();
 });
 
+document.getElementById("itemNameSearch")
+  .addEventListener("input", e => {
+    albumFilterState.nameSearch = e.target.value.toLowerCase().trim();
+    applyItemFilters();
+});
+
 
 function applyItemFilters() {
   let filtered = [...allItems];
 
-  if (albumFilterState.itemType !== "all") {
+  if (albumFilterState.item_type !== "all") {
     filtered = filtered.filter(item =>
-      item.item_type?.toLowerCase() === albumFilterState.itemType.toLowerCase()
+      item.item_type?.toLowerCase() === albumFilterState.item_type.toLowerCase()
     );
   }
 
@@ -266,10 +282,18 @@ function applyItemFilters() {
   }
 
   if (itemIdSearchTerm !== "") {
-    albumFilterState.itemType = "all";
+    albumFilterState.item_type = "all";
     albumFilterState.artist_name = "all";
     filtered = filtered.filter(item =>
       String(item.id) === itemIdSearchTerm
+    );
+  }
+  if (albumFilterState.nameSearch) {
+    const search = albumFilterState.nameSearch;
+
+    filtered = filtered.filter(item =>
+      item.item_name?.toLowerCase().includes(search) ||
+      item.artist_name?.toLowerCase().includes(search)
     );
   }
 
@@ -391,6 +415,12 @@ document.getElementById("pcIdSearch").addEventListener("input", e => {
   applyPhotocardFilters();
 });
 
+document.getElementById("pcNameSearch")
+  .addEventListener("input", e => {
+    photocardFilterState.nameSearch = e.target.value.toLowerCase().trim();
+    applyPhotocardFilters();
+});
+
 document.addEventListener('click', (e) => {
   const flipInner = e.target.closest('.pc-flip-inner');
 
@@ -422,6 +452,15 @@ function applyPhotocardFilters() {
     photocardFilterState.member = "all";
     filtered = filtered.filter(pc =>
       String(pc.id) === pcIdSearchTerm
+    );
+  }
+
+  if (photocardFilterState.nameSearch) {
+    const search = photocardFilterState.nameSearch;
+
+    filtered = filtered.filter(pc =>
+      pc.pc_version?.toLowerCase().includes(search) ||
+      pc.member?.toLowerCase().includes(search)
     );
   }
 

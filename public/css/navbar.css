@@ -2,7 +2,7 @@
   display: flex;
   gap: 1rem;
   padding: 1rem 2rem;
-  background: #faf7f9;
+  background: #81416c;
   border-bottom: 1px solid #e6dfe6;
 }
 
@@ -10,7 +10,7 @@
   text-decoration: none;
   font-size: 0.95rem;
   color: #4a3b47;
-  background: #fff;
+  background: #81416c;
   padding: 0.5rem 1rem;
   border-radius: 999px;
   box-shadow: 0 2px 4px rgba(0,0,0,0.03);
@@ -40,7 +40,7 @@
 .main-footer {
   text-align: center;
   padding: 2rem 1rem;
-  background-color: #f8f0f4;
+  background-color: #81416c;
   color: #443e3e;
   margin-top: 3rem;
 }
