@@ -4,6 +4,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const photocardForm = document.getElementById("photocardForm");
   const albumForm = document.getElementById("albumForm");
 
+  const imageInput = albumForm.querySelector('[name="image_front"]');
+
+
+  if (imageInput) {
+  imageInput.value = "";
+}
+
   // -------------------------
   // Category change
   // -------------------------
@@ -125,50 +132,58 @@ document.addEventListener("DOMContentLoaded", () => {
       if (form.elements[key]) form.elements[key].value = val;
     }
   }
-});
 
-// -------------------------
-// Form submission (updates the database with your edits)
-// -------------------------
-photocardForm.addEventListener("submit", e => {
-  e.preventDefault();
-  if (!currentItemId) return;
+  // -------------------------
+  // Form submission (updates the database with your edits)
+  // -------------------------
+  photocardForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
 
-  const data = Object.fromEntries(new FormData(photocardForm));
+    if (!currentItemId) {
+      console.error("No photocard selected");
+      return;
+    }
 
-  fetch(`/api/ownedPhotocards/${currentItemId}`, {
+    const formData = new FormData(photocardForm);
+
+
+    const res = await fetch(`/api/ownedPhotocards/${currentItemId}`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  })
-    .then(res => res.json())
-    .then(() => {
-      alert("Photocard updated successfully!");
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Failed to update photocard");
+    body: formData
     });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("Server error response:", text);
+      return;
+    }
+
+    const data = await res.json();
+    console.log("Success:", data);
+    console.log("Update result:", data);
+    alert("Photocard updated!");
+  });
+
+  albumForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    if (!currentItemId) {
+      console.error("No album selected");
+      return;
+    }
+
+    const formData = new FormData(albumForm);
+
+    const res = await fetch(`/api/ownedItems/${currentItemId}`, {
+      method: "PUT",
+      body: formData
+    });
+
+    const data = await res.json();
+    console.log("Success:", data);
+    console.log("Update result:", data);
+    alert("Album updated!");
+  });
 });
 
-albumForm.addEventListener("submit", e => {
-  e.preventDefault();
-  if (!currentItemId) return;
-
-  const data = Object.fromEntries(new FormData(albumForm));
-
-  fetch(`/api/ownedItems/${currentItemId}`, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data)
-  })
-    .then(res => res.json())
-    .then(() => {
-      alert("Album updated successfully!");
-    })
-    .catch(err => {
-      console.error(err);
-      alert("Failed to update album");
-    });
-});
 

@@ -3,6 +3,9 @@ const sqlite3 = require("sqlite3").verbose();
 const cors = require("cors");
 const session = require("express-session");
 const bcrypt = require("bcrypt");
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = 3000;
@@ -13,6 +16,71 @@ const PORT = 3000;
 app.use(cors());
 app.use(express.json());
 require("dotenv").config();
+
+// -------------------------
+// IMAGE AUTO RENAMING
+// -------------------------
+const storage = multer.diskStorage({
+
+  destination: (req, file, cb) => {
+
+    const artist = (req.body.artist_name || "unknown")
+      .toLowerCase()
+      .replace(/\s+/g, "");
+
+    let folder = "";
+
+  if (req.body.item_name) {
+    // ALBUMS
+    folder = `public/images/${artist}/albums`;
+
+  } else {
+
+    // PHOTOCARDS
+    if (file.fieldname === "image_front") {
+      folder = `public/images/${artist}/photocards/front`;
+    }
+
+    if (file.fieldname === "image_back") {
+      folder = `public/images/${artist}/photocards/back`;
+    }
+  }
+
+    fs.mkdirSync(folder, { recursive: true });
+
+    cb(null, folder);
+  },
+
+  filename: (req, file, cb) => {
+
+    const ext = path.extname(file.originalname);
+
+    if (req.body.item_name) {
+
+      // Album naming
+      const safeItem = (req.body.item_name || "unknown")
+        .toLowerCase()
+        .replace(/\s+/g, "_");
+
+      cb(null, `${safeItem}${ext}`);
+
+    } else {
+
+      // Photocard naming
+      const safeMember = (req.body.member || "unknown")
+        .toLowerCase()
+        .replace(/\s+/g, "_");
+
+      const safeVersion = (req.body.pc_version || "unknown")
+        .toLowerCase()
+        .replace(/\s+/g, "_");
+
+      cb(null, `${safeMember}_${safeVersion}${ext}`);
+    }
+  }
+});
+
+const upload = multer({ storage });
 
 // -------------------------
 //using environment variable for security
@@ -67,11 +135,19 @@ const db = new sqlite3.Database("./collection.db", (err) => {
 //API Route to SQL
 //(Inserts Add-Item form information into database)
 // -------------------------
-app.post("/api/ownedItems", requireAdmin, (req, res) => {
+app.post(
+  "/api/ownedItems",
+  requireAdmin,
+  upload.single("image_front"),
+  (req, res) => {
   const {
     item_type, item_name, artist_name, pb_label,
-    komca_number, release_date, item_rarity, purchase_location, condition, est_marketprice, notes, image_front_url
+    komca_number, release_date, item_rarity, purchase_location, condition, est_marketprice, notes, image_front
   } = req.body;
+
+  const frontPath = req.file
+    ? req.file.path.replace("public", "").replace(/\\/g, "/")
+    : existingItem.image_front_url;
 
   db.run(
     `
@@ -81,15 +157,23 @@ app.post("/api/ownedItems", requireAdmin, (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
     [item_type, item_name, artist_name, pb_label, komca_number, release_date,
-     item_rarity, purchase_location, condition, est_marketprice, notes, image_front_url],
+     item_rarity, purchase_location, condition, est_marketprice, notes, frontPath],
     () => res.json({ success: true })
   );
 });
-app.post("/api/ownedPhotocards", requireAdmin, (req, res) => {
+app.post(
+  "/api/ownedPhotocards",
+  requireAdmin,
+  upload.fields([
+    { name: "image_front", maxCount: 1 },
+    { name: "image_back", maxCount: 1 }
+  ]),
+  (req, res) => {
   const {
     artist_name, member, pc_source, version,
-    pc_rarity, purchase_location, condition, trade_value, notes, image_front_url, image_back_url
+    pc_rarity, purchase_location, condition, trade_value, notes, image_front, image_back
   } = req.body;
+
 
   db.run(
     `
@@ -99,7 +183,7 @@ app.post("/api/ownedPhotocards", requireAdmin, (req, res) => {
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
     [artist_name, member, pc_source, version,
-     pc_rarity, purchase_location, condition, trade_value, notes, image_front_url, image_back_url],
+     pc_rarity, purchase_location, condition, trade_value, notes, frontPath, backPath],
     () => res.json({ success: true })
   );
 });
@@ -184,118 +268,172 @@ app.get("/api/ownedPhotocards", requireAdmin, (req, res) => {
 // -------------------------
 // Update photocard (for admin edit)
 // -------------------------
-app.put("/api/ownedPhotocards/:id", requireAdmin, (req, res) => {
-  const { id } = req.params;
-  const {
-    pc_source,
-    pc_version,
-    pc_rarity,
-    purchase_location,
-    condition,
-    trade_value,
-    image_front_url,
-    image_back_url,
-    notes
-  } = req.body;
+app.put("/api/ownedPhotocards/:id", upload.fields([
+  { name: "image_front" },
+  { name: "image_back" }
+]), (req, res) => {
 
-  db.run(
-    `
-    UPDATE ownedPhotocards
-    SET
-      pc_source = ?,
-      pc_version = ?,
-      pc_rarity = ?,
-      purchase_location = ?,
-      condition = ?,
-      trade_value = ?,
-      image_front_url = ?,
-      image_back_url = ?,
-      notes = ?
-    WHERE id = ?
-    `,
-    [
-      pc_source,
-      pc_version,
-      pc_rarity,
-      purchase_location,
-      condition,
-      trade_value,
-      image_front_url,
-      image_back_url,
-      notes,
-      id
-    ],
-    function (err) {
-      if (err) {
-        return res.status(500).json({ error: err.message });
-      }
-      res.json({ success: true });
+const { id } = req.params;
+
+
+db.get(
+  "SELECT * FROM ownedPhotocards WHERE id = ?",
+  [id],
+  (err, existingCard) => {
+
+    if (err) {
+      return res.status(500).json({ error: err.message });
     }
-  );
-});
+
+    if (!existingCard) {
+      return res.status(404).json({ error: "Photocard not found" });
+    }
+
+    // FRONT IMAGE
+    const frontPath = req.files?.image_front
+      ? req.files.image_front[0].path
+          .replace("public", "")
+          .replace(/\\/g, "/")
+      : existingCard.image_front_url;
+
+    // BACK IMAGE
+    const backPath = req.files?.image_back
+      ? req.files.image_back[0].path
+          .replace("public", "")
+          .replace(/\\/g, "/")
+      : existingCard.image_back_url;
+
+    const updated = {
+      artist_name: req.body.artist_name || existingCard.artist_name,
+      member: req.body.member || existingCard.member,
+      pc_source: req.body.pc_source || existingCard.pc_source,
+      pc_version: req.body.pc_version || existingCard.pc_version,
+      pc_rarity: req.body.pc_rarity || existingCard.pc_rarity,
+      purchase_location: req.body.purchase_location || existingCard.purchase_location,
+      condition: req.body.condition || existingCard.condition,
+      trade_value: req.body.trade_value || existingCard.trade_value,
+      notes: req.body.notes || existingCard.notes,
+      image_front_url: frontPath,
+      image_back_url: backPath
+    };
+
+    db.run(
+      `
+      UPDATE ownedPhotocards
+      SET
+        artist_name = ?,
+        member = ?,
+        pc_source = ?,
+        pc_version = ?,
+        pc_rarity = ?,
+        purchase_location = ?,
+        condition = ?,
+        trade_value = ?,
+        notes = ?,
+        image_front_url = ?,
+        image_back_url = ?
+      WHERE id = ?
+      `,
+      [
+        updated.artist_name,
+        updated.member,
+        updated.pc_source,
+        updated.pc_version,
+        updated.pc_rarity,
+        updated.purchase_location,
+        updated.condition,
+        updated.trade_value,
+        updated.notes,
+        updated.image_front_url,
+        updated.image_back_url,
+        id
+      ],
+      function(err) {
+
+        if (err) {
+          console.error(err);
+          return res.status(500).json({
+            error: "Update failed"
+          });
+        }
+
+        res.json({
+          success: true
+        });
+
+      }
+    );
+
+  }
+);
+
+}
+);
 
 // -------------------------
 // Albums update (for admin edit)
 // -------------------------
-app.put("/api/ownedItems/:id", requireAdmin, (req, res) => {
-  const { id } = req.params;
-  const {
-    item_type,
-    item_name,
-    artist_name,
-    publishing_label,
-    komca_number,
-    release_date,
-    item_rarity,
-    purchase_location,
-    condition,
-    est_marketprice,
-    notes,
-    image_front_url
-  } = req.body;
+app.put(
+  "/api/ownedItems/:id",
+  upload.single("image_front"),
+  (req, res) => {
 
-  db.run(
-    `
-    UPDATE ownedItems
-    SET
-      item_type = ?,
-      item_name = ?,
-      artist_name = ?,
-      publishing_label = ?,
-      komca_number = ?,      -- ✅ FIXED
-      release_date = ?,
-      item_rarity = ?,
-      purchase_location = ?,
-      condition = ?,
-      est_marketprice = ?,
-      notes = ?,
-      image_front_url = ?
-    WHERE id = ?
-    `,
-    [
-      item_type,
-      item_name,
-      artist_name,
-      publishing_label,
-      komca_number,
-      release_date,
-      item_rarity,
-      purchase_location,
-      condition,
-      est_marketprice,
-      notes,
-      image_front_url,
-      id
-    ],
-    function (err) {
-      if (err) {
-        console.error(err);
-        return res.status(500).json({ error: "Database update failed" });
-      }
-      res.json({ success: true });
-    }
-  );
-});
+    const { id } = req.params;
+
+    db.get("SELECT * FROM ownedItems WHERE id = ?", [id], (err, existing) => {
+      if (err) return res.status(500).json({ error: err.message });
+      if (!existing) return res.status(404).json({ error: "Item not found" });
+
+const file = req.file;
+const imagePath = file
+  ? file.path.replace("public", "").replace(/\\/g, "/")
+  : existing.image_front_url;
+
+      db.run(
+        `
+        UPDATE ownedItems
+        SET
+          item_type = ?,
+          item_name = ?,
+          artist_name = ?,
+          publishing_label = ?,
+          komca_number = ?,
+          release_date = ?,
+          item_rarity = ?,
+          purchase_location = ?,
+          condition = ?,
+          est_marketprice = ?,
+          notes = ?,
+          image_front_url = ?
+        WHERE id = ?
+        `,
+        [
+          req.body.item_type,
+          req.body.item_name,
+          req.body.artist_name,
+          req.body.publishing_label,
+          req.body.komca_number,
+          req.body.release_date,
+          req.body.item_rarity,
+          req.body.purchase_location,
+          req.body.condition,
+          req.body.est_marketprice,
+          req.body.notes,
+          imagePath,
+          id
+        ],
+        function (err) {
+          if (err) {
+            console.error(err);
+            return res.status(500).json({ error: "Update failed" });
+          }
+
+          res.json({ success: true });
+        }
+      );
+    });
+  }
+);
 
 
 

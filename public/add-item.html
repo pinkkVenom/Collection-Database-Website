@@ -29,7 +29,7 @@
     </select>
   </label>
 
-  <form id="itemForm" class="hidden">
+  <form id="itemForm" class="hidden" enctype="multipart/form-data">
     <input type="hidden" name="item_type" id="itemType">
 
     <!-- Album type (REQUIRED) -->
@@ -103,7 +103,7 @@
 
     <label>Estimated Price <input name="est_marketprice" type="number" step="0.01"></label>
 
-    <label>Front-Facing Image Link <input type="text" name="image_front_url"></label>
+    <label>Front-Facing Image Link <input type="file" name="image_front"></label>
 
     <label class="notes">Notes<textarea name="notes" rows="6"></textarea></label>
 
@@ -111,7 +111,7 @@
   </form>
 
 
-  <form id="photocardForm" class="hidden">
+  <form id="photocardForm" class="hidden" enctype="multipart/form-data">
   <!-- Artist name (REQUIRED) -->
     <label>
       <span class="label-title">
@@ -180,8 +180,12 @@
 
     <label>Trade Value <input name="trade_value" type="number" step="0.01"></label>
 
-    <label>Front-Facing Image Link <input type="text" name="image_front_url"></label>
-    <label>Back-Facing Image Link <input type="text" name="image_back_url"></label>
+    <label>Front-Facing Image Link <input type="file" name="image_front"></label>
+    <label>
+      Back-Facing Image Link
+      <input type="file" name="image_back">
+    </label>
+    </label>
 
     <label class="notes">Notes<textarea name="notes" rows="6"></textarea></label>
 

@@ -39,7 +39,7 @@
     </section>
 
     <!-- Edit form -->
-    <form id="photocardForm" class="admin-card hidden">
+    <form id="photocardForm" class="admin-card hidden" enctype="multipart/form-data">
       <h2>Edit Photocard</h2>
 
       <label>Artist Name <input name="artist_name"></label>
@@ -77,16 +77,18 @@
         <option value="fair">Fair</option>
         <option value="damaged">Damaged</option>
       </select></label>
-      <label>Purchase Location <input name="purchase_location"></label>
       <label>Trade Value <input name="trade_value"></label>
-      <label>Front Image <input name="image_front_url"></label>
-      <label>Back Image <input name="image_back_url"></label>
+      <label>Front-Facing Image Link <input type="file" name="image_front"></label>
+      <label>
+        Back-Facing Image Link
+        <input type="file" name="image_back">
+      </label>
       <label>Notes <textarea name="notes"></textarea></label>
 
       <button type="submit">Save Photocard</button>
     </form>
 
-    <form id="albumForm" class="admin-card hidden">
+    <form id="albumForm" class="admin-card hidden" enctype="multipart/form-data">
       <h2>Edit Album / Merch</h2>
 
       <label>Artist Name <input name="artist_name"></label>
@@ -123,7 +125,7 @@
       </select></label>
       <label>Purchase Location <input name="purchase_location"></label>
       <label>Estimated Price <input name="est_marketprice"></label>
-      <label>Front Image <input name="image_front_url"></label>
+      <label>Front-Facing Image Link <input type="file" name="image_front"></label>
       <label>Notes <textarea name="notes"></textarea></label>
 
       <button type="submit">Save Album</button>
