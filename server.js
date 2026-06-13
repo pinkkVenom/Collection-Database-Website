@@ -147,7 +147,7 @@ app.post(
 
   const frontPath = req.file
     ? req.file.path.replace("public", "").replace(/\\/g, "/")
-    : existingItem.image_front_url;
+    : null;
 
   db.run(
     `
@@ -174,6 +174,17 @@ app.post(
     pc_rarity, purchase_location, condition, trade_value, notes, image_front, image_back
   } = req.body;
 
+  const frontPath = req.files?.image_front?.[0]
+    ? req.files.image_front[0].path
+        .replace("public", "")
+        .replace(/\\/g, "/")
+    : null;
+
+  const backPath = req.files?.image_back?.[0]
+    ? req.files.image_back[0].path
+        .replace("public", "")
+        .replace(/\\/g, "/")
+    : null;
 
   db.run(
     `
@@ -283,10 +294,6 @@ db.get(
 
     if (err) {
       return res.status(500).json({ error: err.message });
-    }
-
-    if (!existingCard) {
-      return res.status(404).json({ error: "Photocard not found" });
     }
 
     // FRONT IMAGE
