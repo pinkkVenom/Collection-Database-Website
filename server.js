@@ -53,8 +53,6 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
 
-    const ext = path.extname(file.originalname);
-
     if (req.body.item_name) {
 
       // Album naming
@@ -62,7 +60,7 @@ const storage = multer.diskStorage({
         .toLowerCase()
         .replace(/\s+/g, "_");
 
-      cb(null, `${safeItem}${ext}`);
+      cb(null, `${safeItem}`);
 
     } else {
 
@@ -75,7 +73,7 @@ const storage = multer.diskStorage({
         .toLowerCase()
         .replace(/\s+/g, "_");
 
-      cb(null, `${safeMember}_${safeVersion}${ext}`);
+      cb(null, `${safeMember}_${safeVersion}`);
     }
   }
 });
@@ -170,7 +168,7 @@ app.post(
   ]),
   (req, res) => {
   const {
-    artist_name, member, pc_source, version,
+    artist_name, member, pc_source, pc_version,
     pc_rarity, purchase_location, condition, trade_value, notes, image_front, image_back
   } = req.body;
 
@@ -193,7 +191,7 @@ app.post(
      purchase_location, condition, trade_value, notes, image_front_url, image_back_url)
     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
-    [artist_name, member, pc_source, version,
+    [artist_name, member, pc_source, pc_version,
      pc_rarity, purchase_location, condition, trade_value, notes, frontPath, backPath],
     () => res.json({ success: true })
   );

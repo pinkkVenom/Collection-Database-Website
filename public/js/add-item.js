@@ -58,7 +58,6 @@ itemForm.addEventListener("submit", async (e) => {
 //submit to photocards API
 // -------------------------
 photocardForm.addEventListener("submit", async (e) => {
-
   e.preventDefault();
 
   const formData = new FormData(photocardForm);
