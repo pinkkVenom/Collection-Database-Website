@@ -1,16 +1,16 @@
 body {
-  background: #473441;
-  color: #333;
+  background: var(--bg);
+  color: var(--text-primary);
 }
 
 .page-header {
   padding: 3rem 2rem 2.5rem;
   background: linear-gradient(
     180deg,
-    #faf7f9 0%,
-    #81416c 100%
+    var(--bg-elevated) 0%,
+    var(--surface) 100%
   );
-
+  border-bottom: 1px solid var(--border-soft);
   text-align: center;
 }
 
@@ -18,14 +18,14 @@ body {
   margin: 0;
   font-size: 2.2rem;
   font-weight: 600;
-  color: #2f1d2b;
+  color: var(--text-primary);
   letter-spacing: 0.5px;
 }
 
 .page-header .subtitle {
   margin-top: 0.75rem;
   font-size: 1rem;
-  color: #6a5a67;
+  color: var(--text-secondary);
 }
 
 @media (max-width: 600px) {

@@ -1,9 +1,3 @@
-//For Images
-//PHOTO NAMING FORMAT:
-//CamelCase for longer entries
-//ALBUM: albumname-version-front/back
-//PHOTOCARD: member-album/eventversion-front/back.png
-
 document.addEventListener("DOMContentLoaded", () => {
   initMuseum();
 });
@@ -23,6 +17,7 @@ const albumFilterState = {
 const photocardFilterState = {
   artist_name: "all",
   member: "all",
+  era: "all",
   nameSearch: ""
 };
 
@@ -309,12 +304,47 @@ let allPhotocards = [];
 function populatePhotocardFilters() {
   const groupSelect = document.getElementById("pcGroupFilter");
   const memberSelect = document.getElementById("pcMemberFilter");
+  const eraSelect = document.getElementById("pcEraFilter");
 
   const groups = [...new Set(allPhotocards.map(p => p.artist_name))].sort();
   const members = [...new Set(allPhotocards.map(p => p.member))].sort();
+  const eras = [...new Set(allPhotocards.map(p => p.era).filter(Boolean))].sort();
 
   groups.forEach(g => groupSelect.appendChild(new Option(g, g)));
   members.forEach(m => memberSelect.appendChild(new Option(m, m)));
+  if (eraSelect) eras.forEach(e => eraSelect.appendChild(new Option(e, e)));
+}
+
+// -------------------------
+// builds the composed "Era — Variant (Format) — Outfit" label
+// falls back to the old free-text version for cards that haven't
+// been backfilled with era/outfit yet, and flags them as legacy
+// -------------------------
+function buildPhotocardLabel(pc) {
+  const hasNewFields = pc.era || pc.outfit || pc.variant || pc.format;
+
+  if (!hasNewFields) {
+    return {
+      label: pc.pc_version ? formatLabel(pc.pc_version) : "Unknown",
+      legacy: true
+    };
+  }
+
+  let variantFormat = null;
+  if (pc.variant && pc.format) {
+    variantFormat = `${pc.variant} (${pc.format})`;
+  } else if (pc.variant) {
+    variantFormat = pc.variant;
+  } else if (pc.format) {
+    variantFormat = pc.format;
+  }
+
+  const parts = [pc.era, variantFormat, pc.outfit].filter(Boolean);
+
+  return {
+    label: parts.length ? parts.join(" — ") : "Unknown",
+    legacy: false
+  };
 }
 
 function renderPhotocards(cards) {
@@ -353,6 +383,8 @@ function renderPhotocards(cards) {
       `
       : '';
 
+    const { label: pcLabel, legacy: pcLegacy } = buildPhotocardLabel(pc);
+
     let cardHTML = `
       <div class="image-wrapper">
         ${imageHTML}
@@ -370,9 +402,13 @@ function renderPhotocards(cards) {
         </span>
       </div>
 
+      <div class="pc-label">
+        ${pcLabel}
+        ${pcLegacy ? '<span class="legacy-tag">Needs era/outfit</span>' : ''}
+      </div>
+
       <div class="text-meta">
         <div><span>Source</span><span>${formatLabel(pc.pc_source) || "Unknown"}</span></div>
-        <div><span>Version</span><span>${pc.pc_version || "Unknown"}</span></div>
         <div><span>Trade Value</span><span class="highlight">${pc.trade_value || "Unknown"}</span></div>
         <div><span>Condition</span><span>${formatLabel(pc.condition) || "Unknown"}</span></div>
         <div><span>Purchase</span><span>${pc.purchase_location || "Unknown"}</span></div>
@@ -409,6 +445,14 @@ document.getElementById("pcMemberFilter").addEventListener("change", e => {
   photocardFilterState.member = e.target.value;
   applyPhotocardFilters();
 });
+
+const pcEraFilterEl = document.getElementById("pcEraFilter");
+if (pcEraFilterEl) {
+  pcEraFilterEl.addEventListener("change", e => {
+    photocardFilterState.era = e.target.value;
+    applyPhotocardFilters();
+  });
+}
 
 document.getElementById("pcIdSearch").addEventListener("input", e => {
   pcIdSearchTerm = e.target.value.trim();
@@ -447,9 +491,16 @@ function applyPhotocardFilters() {
     );
   }
 
+  if (photocardFilterState.era !== "all") {
+    filtered = filtered.filter(pc =>
+      pc.era?.toLowerCase() === photocardFilterState.era.toLowerCase()
+    );
+  }
+
   if (pcIdSearchTerm !== "") {
     photocardFilterState.artist_name = "all";
     photocardFilterState.member = "all";
+    photocardFilterState.era = "all";
     filtered = filtered.filter(pc =>
       String(pc.id) === pcIdSearchTerm
     );
@@ -460,7 +511,11 @@ function applyPhotocardFilters() {
 
     filtered = filtered.filter(pc =>
       pc.pc_version?.toLowerCase().includes(search) ||
-      pc.member?.toLowerCase().includes(search)
+      pc.member?.toLowerCase().includes(search) ||
+      pc.era?.toLowerCase().includes(search) ||
+      pc.outfit?.toLowerCase().includes(search) ||
+      pc.variant?.toLowerCase().includes(search) ||
+      pc.format?.toLowerCase().includes(search)
     );
   }
 

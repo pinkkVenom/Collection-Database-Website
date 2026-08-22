@@ -20,6 +20,13 @@ require("dotenv").config();
 // -------------------------
 // IMAGE AUTO RENAMING
 // -------------------------
+function sanitizeForFilename(value) {
+  return (value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "_")
+    .replace(/^_+|_+$/g, "");
+}
+
 const storage = multer.diskStorage({
 
   destination: (req, file, cb) => {
@@ -53,27 +60,36 @@ const storage = multer.diskStorage({
 
   filename: (req, file, cb) => {
 
+    const ext = path.extname(file.originalname); // e.g. ".png" — includes the dot
+
     if (req.body.item_name) {
 
       // Album naming
-      const safeItem = (req.body.item_name || "unknown")
-        .toLowerCase()
-        .replace(/\s+/g, "_");
+      const safeItem = sanitizeForFilename(req.body.item_name) || "unknown";
 
-      cb(null, `${safeItem}`);
+      cb(null, `${safeItem}${ext}`);
 
     } else {
 
       // Photocard naming
-      const safeMember = (req.body.member || "unknown")
-        .toLowerCase()
-        .replace(/\s+/g, "_");
+      const safeMember = sanitizeForFilename(req.body.member) || "unknown";
+      const safeEra = sanitizeForFilename(req.body.era);
+      const safeOutfit = sanitizeForFilename(req.body.outfit);
+      const safeVariant = sanitizeForFilename(req.body.variant);
+      const safeFormat = sanitizeForFilename(req.body.format);
+      const safeLegacyVersion = sanitizeForFilename(req.body.pc_version);
 
-      const safeVersion = (req.body.pc_version || "unknown")
-        .toLowerCase()
-        .replace(/\s+/g, "_");
+      let versionPart;
+      if (safeEra || safeOutfit || safeVariant || safeFormat) {
+        // include variant + format so cards sharing the same era + outfit
+        // (but differing only by variant or a holo/polaroid-type format)
+        // don't collide into the same filename
+        versionPart = [safeEra, safeOutfit, safeVariant, safeFormat].filter(Boolean).join("_");
+      } else {
+        versionPart = safeLegacyVersion || "unknown";
+      }
 
-      cb(null, `${safeMember}_${safeVersion}`);
+      cb(null, `${safeMember}_${versionPart}${ext}`);
     }
   }
 });
@@ -169,6 +185,7 @@ app.post(
   (req, res) => {
   const {
     artist_name, member, pc_source, pc_version,
+    era, outfit, variant, format,
     pc_rarity, purchase_location, condition, trade_value, notes, image_front, image_back
   } = req.body;
 
@@ -187,11 +204,11 @@ app.post(
   db.run(
     `
     INSERT INTO ownedPhotocards
-    (artist_name, member, pc_source, pc_version, pc_rarity,
+    (artist_name, member, pc_source, pc_version, era, outfit, variant, format, pc_rarity,
      purchase_location, condition, trade_value, notes, image_front_url, image_back_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
-    [artist_name, member, pc_source, pc_version,
+    [artist_name, member, pc_source, pc_version, era, outfit, variant, format,
      pc_rarity, purchase_location, condition, trade_value, notes, frontPath, backPath],
     () => res.json({ success: true })
   );
@@ -313,6 +330,10 @@ db.get(
       member: req.body.member || existingCard.member,
       pc_source: req.body.pc_source || existingCard.pc_source,
       pc_version: req.body.pc_version || existingCard.pc_version,
+      era: req.body.era || existingCard.era,
+      outfit: req.body.outfit || existingCard.outfit,
+      variant: req.body.variant || existingCard.variant,
+      format: req.body.format || existingCard.format,
       pc_rarity: req.body.pc_rarity || existingCard.pc_rarity,
       purchase_location: req.body.purchase_location || existingCard.purchase_location,
       condition: req.body.condition || existingCard.condition,
@@ -330,6 +351,10 @@ db.get(
         member = ?,
         pc_source = ?,
         pc_version = ?,
+        era = ?,
+        outfit = ?,
+        variant = ?,
+        format = ?,
         pc_rarity = ?,
         purchase_location = ?,
         condition = ?,
@@ -344,6 +369,10 @@ db.get(
         updated.member,
         updated.pc_source,
         updated.pc_version,
+        updated.era,
+        updated.outfit,
+        updated.variant,
+        updated.format,
         updated.pc_rarity,
         updated.purchase_location,
         updated.condition,

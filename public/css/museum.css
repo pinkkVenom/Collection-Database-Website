@@ -6,6 +6,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  background: var(--surface-alt);
 }
 
 .image-wrapper.square {
@@ -29,8 +30,8 @@
   gap: 1rem;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  background-color: #fafafa;
-  border: 1px solid #e5e5e5;
+  background-color: var(--surface);
+  border: 1px solid var(--border-soft);
   border-radius: 12px;
 }
 
@@ -38,26 +39,28 @@
   padding: 0.5rem 0.75rem;
   font-size: 0.9rem;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  background-color: white;
+  border: 1px solid var(--input-border);
+  background-color: var(--input-bg);
+  color: var(--text-primary);
   min-width: 180px;
   cursor: pointer;
 }
 
 .controls select:focus {
   outline: none;
-  border-color: #111;
+  border-color: var(--accent);
 }
 
 .empty-state {
   text-align: center;
-  color: #777;
+  color: var(--text-muted);
   font-size: 0.95rem;
   padding: 2rem 0;
 }
 
 .item-card {
-  background: #f075a848;
+  background: linear-gradient(160deg, var(--surface), var(--surface-alt));
+  border: 1px solid var(--border-soft);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -67,8 +70,8 @@
   margin: 5px;
   gap: 0.2rem;
   padding: 1rem;
-  transition: transform 0.2s;
-  box-shadow: 0 3px 6px rgba(0,0,0,0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 3px 6px var(--shadow-soft);
 }
 
 .item-card h3 {
@@ -82,14 +85,13 @@
 
 .notes {
   font-size: 0.9rem;
-  color: #333;
+  color: var(--text-secondary);
   white-space: pre-wrap; /* keeps line breaks from DB notes */
 }
 
 .item-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-  transition: all 0.2s ease;
+  box-shadow: 0 6px 18px var(--shadow);
 }
 
 .museum-grid{
@@ -106,23 +108,24 @@
 
 .tab {
   background: transparent;
-  border: 1px solid #ddd;
+  border: 1px solid var(--border);
   padding: 0.6rem 1.25rem;
   font-size: 0.95rem;
   border-radius: 999px;
   cursor: pointer;
-  color: #444;
+  color: var(--text-secondary);
   transition: all 0.2s ease;
 }
 
 .tab:hover {
-  background-color: #f2f2f2;
+  background-color: var(--surface-hover);
+  color: var(--text-primary);
 }
 
 .tab.active {
-  background-color: #111;
-  color: white;
-  border-color: #111;
+  background-color: var(--accent);
+  color: var(--accent-on-accent);
+  border-color: var(--accent);
 }
 
 .tab-content {
@@ -141,7 +144,9 @@
 .filters select {
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 .main-text {
@@ -152,14 +157,36 @@
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
-  color: #2f1d2b;
+  color: var(--text-primary);
 }
 
 .sub-text {
   margin: 5px;
   font-size: 0.98rem;
   font-weight: 600;
-  color: #856a7f;
+  color: var(--text-secondary);
+}
+
+.pc-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-top: 0.5rem;
+  line-height: 1.4;
+}
+
+.legacy-tag {
+  display: inline-block;
+  margin-left: 0.4rem;
+  font-size: 0.6rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--accent-strong);
+  background: var(--accent-strong-soft);
+  padding: 0.15rem 0.45rem;
+  border-radius: 999px;
+  vertical-align: middle;
 }
 
 .text-meta {
@@ -172,7 +199,7 @@
 
 .text-meta div {
   padding-bottom: 0.25rem;
-  border-bottom: 1px dashed rgba(0,0,0,0.06);
+  border-bottom: 1px dashed var(--border-soft);
 }
 
 .text-meta span:first-child {
@@ -180,14 +207,14 @@
   font-weight: 600;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #8f7d89;
+  color: var(--text-muted);
 }
 
 .text-meta span:last-child {
   font-size: 0.8rem;
   font-weight: 500;
-  color: #2f1d2b;
-  background: rgba(0,0,0,0.04);
+  color: var(--text-primary);
+  background: var(--surface-alt);
   padding: 0.15rem 0.45rem;
   border-radius: 6px;
   max-width: 100%;
@@ -197,8 +224,8 @@
 
 .text-meta .highlight {
   font-weight: 600;
-  color: #af0e5c;
-  background: rgba(175, 14, 92, 0.08);
+  color: var(--accent-strong);
+  background: var(--accent-strong-soft);
 }
 
 .pc-flip-card {
@@ -251,10 +278,10 @@
   border-radius: 8px;
   background: repeating-linear-gradient(
     45deg,
-    #f2f2f2,
-    #f2f2f2 10px,
-    #e6e6e6 10px,
-    #e6e6e6 20px
+    var(--surface-alt),
+    var(--surface-alt) 10px,
+    var(--surface-hover) 10px,
+    var(--surface-hover) 20px
   );
   display: flex;
   align-items: center;
@@ -264,7 +291,7 @@
 
 .pc-back-placeholder span {
   font-size: 0.8rem;
-  color: #777;
+  color: var(--text-muted);
   font-style: italic;
   padding: 0.5rem;
 }
@@ -279,6 +306,7 @@
   bottom: 8px;
   right: 10px;
   font-size: 0.8rem;
+  color: var(--text-secondary);
   opacity: 0.6;
 }
 
@@ -327,7 +355,9 @@
   padding: 8px 12px;
   margin-bottom: 10px;
   border-radius: 8px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 
@@ -341,7 +371,7 @@
 
 @media (max-width: 900px) {
   .text-meta span:last-child {
-    background: rgba(0,0,0,0.03);
+    background: var(--surface-hover);
     padding: 0.2rem 0.5rem;
   }
 }

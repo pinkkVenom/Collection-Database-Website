@@ -1,0 +1,55 @@
+/* =========================================================
+   THEME TOKENS
+   One place to change the whole site's palette.
+   Every other CSS file should reference these variables
+   instead of hardcoding hex colors.
+   ========================================================= */
+
+:root {
+  color-scheme: dark; /* hints native scrollbars/inputs to render dark */
+
+  /* Backgrounds, darkest to lightest */
+  --bg: #170f1a;
+  --bg-elevated: #1f1522;
+  --surface: #241a28;
+  --surface-alt: #2c202f;
+  --surface-hover: #34263a;
+
+  /* Borders */
+  --border: #40313f;
+  --border-soft: #362a38;
+
+  /* Text */
+  --text-primary: #f2e9f0;
+  --text-secondary: #c3aec0;
+  --text-muted: #8f7a8d;
+
+  /* Accent (kept close to the site's original mauve/plum identity,
+     brightened so it still pops against dark surfaces) */
+  --accent: #c988b8;
+  --accent-hover: #dba3cb;
+  --accent-soft: rgba(201, 136, 184, 0.14);
+  --accent-on-accent: #1c1220; /* text color to use ON TOP of --accent */
+
+  /* Secondary highlight (prices, dividers, footer links) */
+  --accent-strong: #ff6fa8;
+  --accent-strong-soft: rgba(255, 111, 168, 0.12);
+
+  /* Form controls */
+  --input-bg: #2a1f2d;
+  --input-border: #46374a;
+
+  /* Shadows */
+  --shadow: rgba(0, 0, 0, 0.55);
+  --shadow-soft: rgba(0, 0, 0, 0.35);
+
+  --nav-bg: #1f1522;
+}
+
+/* Placeholder text needs its own rule or it defaults to
+   near-black, which disappears on a dark input. */
+input::placeholder,
+textarea::placeholder {
+  color: var(--text-muted);
+  opacity: 1;
+}

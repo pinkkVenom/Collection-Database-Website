@@ -1,7 +1,14 @@
 .required {
-  color: #a03e6c;
+  color: var(--accent-strong);
   font-weight: 700;
   margin-left: 0.2rem;
+}
+
+.hint {
+  font-weight: 400;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-left: 0.3rem;
 }
 
 *, *::before, *::after {
@@ -17,15 +24,16 @@
   margin: 0 auto;
   padding: 2rem;
   min-height: 100vh;
-  background: linear-gradient(180deg, #81416c, #ede6ef);
+  background: linear-gradient(180deg, var(--bg-elevated), var(--bg));
 }
 
 #itemForm,
 #photocardForm {
-  background: #ffffff;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
   padding: 2rem;
   border-radius: 16px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px var(--shadow);
   margin-top: 1.5rem;
 
   display: flex;
@@ -52,7 +60,7 @@ form label {
   flex-direction: column;
   font-size: 0.9rem;
   font-weight: 600;
-  color: #3b2b3f;
+  color: var(--text-primary);
   gap: 0.35rem;
 }
 
@@ -75,17 +83,18 @@ form select,
 form textarea {
   padding: 0.7rem 0.8rem;
   border-radius: 8px;
-  border: 1px solid #d8cfe0;
+  border: 1px solid var(--input-border);
   font-size: 0.95rem;
-  background: #faf8fb;
+  background: var(--input-bg);
+  color: var(--text-primary);
 }
 
 form input:focus,
 form select:focus,
 form textarea:focus {
   outline: none;
-  border-color: #a574a7;
-  background: #fff;
+  border-color: var(--accent);
+  background: var(--surface-hover);
 }
 
 #categorySelect {
@@ -100,8 +109,8 @@ form button {
   padding: 0.75rem 1.6rem;
   border-radius: 10px;
   border: none;
-  background: #a574a7;
-  color: #fff;
+  background: var(--accent);
+  color: var(--accent-on-accent);
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
@@ -109,7 +118,7 @@ form button {
 }
 
 form button:hover {
-  background: #8d5e90;
+  background: var(--accent-hover);
 }
 
 label[for="categorySelect"],
@@ -131,7 +140,7 @@ label:has(#categorySelect) {
 
   font-weight: 600;
   font-size: 0.95rem;
-  color: #3b2b3f;
+  color: var(--text-primary);
 }
 
 
@@ -141,4 +150,3 @@ label:has(#categorySelect) {
     padding: 1.8rem 1.4rem;
   }
 }
-

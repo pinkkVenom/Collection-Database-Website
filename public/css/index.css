@@ -1,10 +1,10 @@
 .intro-text h2 {
   margin-bottom: 1rem;
-  color: #2f1d2b;
+  color: var(--text-primary);
 }
 
 .intro-text p {
-  color: #443e3e;
+  color: var(--text-secondary);
   line-height: 1.5;
 }
 
@@ -16,30 +16,31 @@
 
 .intro-card {
   max-width: 900px;
-  background: #fff;
+  background: var(--surface);
+  border: 1px solid var(--border-soft);
   padding: 2.5rem;
   border-radius: 20px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  box-shadow: 0 10px 30px var(--shadow);
   text-align: center;
 }
 
 .intro-card h2 {
   font-size: 1.8rem;
   margin-bottom: 1rem;
-  color: #2f1d2b;
+  color: var(--text-primary);
 }
 
 .intro-card p {
   font-size: 1rem;
   line-height: 1.7;
-  color: #443e3e;
+  color: var(--text-secondary);
   margin-bottom: 1rem;
 }
 
 .section-divider {
   width: 80px;
   height: 4px;
-  background: #af0e5c;
+  background: var(--accent-strong);
   border-radius: 999px;
   margin: 2rem auto;
 }
@@ -70,7 +71,7 @@
   margin-top: 0.5rem;
   font-size: 0.85rem;
   font-weight: 600;
-  color: #6a5a67;
+  color: var(--text-secondary);
   letter-spacing: 0.03em;
 }
 
@@ -87,7 +88,7 @@
   object-fit:cover;   /* 🔑 prevents cropping */
   flex-shrink: 0;
   border-radius: 17px;
-  background: #eee;      /* nice fallback */
+  background: var(--surface-alt);      /* nice fallback */
   transition: transform 0.5s ease;
 }
 
@@ -116,9 +117,9 @@
 }
 
 .arrow {
-  background-color: #111;
-  color: white;
-  border: none;
+  background-color: var(--surface-alt);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   border-radius: 50%;
   width: 40px;
   height: 40px;
@@ -129,7 +130,7 @@
 }
 
 .arrow:hover {
-  background-color: #444;
+  background-color: var(--surface-hover);
 }
 
 .left-arrow {

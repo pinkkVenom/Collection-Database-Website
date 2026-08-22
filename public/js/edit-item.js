@@ -56,7 +56,10 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function formatPhotocardOption(pc) {
-    return `${pc.artist_name} — ${pc.member} — ${pc.pc_version || "Unknown"}`;
+    const label = (pc.era || pc.outfit)
+      ? [pc.era, pc.outfit].filter(Boolean).join(" - ")
+      : (pc.pc_version || "Unknown");
+    return `${pc.artist_name} — ${pc.member} — ${label}`;
   }
 
   function formatAlbumOption(album) {
@@ -88,6 +91,10 @@ document.addEventListener("DOMContentLoaded", () => {
       member: pc.member,
       pc_source: pc.pc_source,
       pc_version: pc.pc_version,
+      era: pc.era ?? "",
+      outfit: pc.outfit ?? "",
+      variant: pc.variant ?? "",
+      format: pc.format ?? "",
       pc_rarity: pc.pc_rarity,
       condition: pc.condition,
       purchase_location: pc.purchase_location,

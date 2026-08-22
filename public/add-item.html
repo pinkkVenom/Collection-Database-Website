@@ -2,6 +2,7 @@
 <html>
 <head>
   <title>K-Pop Collection</title>
+  <link rel="stylesheet" href="/css/theme.css">
   <link rel="stylesheet" href="/css/add-item.css">
   <link rel="stylesheet" href="/css/navbar.css">
   <link rel="stylesheet" href="/css/header.css">
@@ -151,7 +152,17 @@
       </select>
     </label>
 
-    <label>Version <input type="text" name="pc_version"></label>
+    <label>Era <input type="text" name="era" placeholder="e.g. Armageddon"></label>
+
+    <label>Outfit / Concept <input type="text" name="outfit" placeholder="e.g. Superbeing"></label>
+
+    <label>Variant <span class="hint">(optional — only if era + outfit isn't unique)</span>
+      <input type="text" name="variant" placeholder="e.g. Ver. A">
+    </label>
+
+    <label>Format <span class="hint">(optional)</span>
+      <input type="text" name="format" placeholder="e.g. Lenticular">
+    </label>
 
     <label>
       Item Rarity
