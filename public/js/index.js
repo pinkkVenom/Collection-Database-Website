@@ -20,7 +20,7 @@ const images = [
     caption: "BLACKPINK"
   },
   {
-    src: "https://www.billboard.com/wp-content/uploads/2025/03/feature-aespa-billboard-2025-bb5-abi-polinsky-6-1548.jpg",
+    src: "https://www.pinkvilla.com/images/2025-01/133995648_aespa-6-2.jpg",
     caption: "aespa"
   },
   {
@@ -68,7 +68,7 @@ const images = [
     caption: "Kep1er"
   },
   {
-    src: "https://s2.aptocdn.com/www.fashionchingu.com/wp-content/uploads/2025/06/kiss-of-life-1-1024x683.jpg",
+    src: "https://www.nme.com/wp-content/uploads/2024/11/NME-HERO-KISS-OF-LIFE-CREDIT-AHN-HONGJE@2560x1625-2136x1356.jpg",
     caption: "Kiss of Life"
   },
   {
@@ -80,20 +80,32 @@ const images = [
     caption: "BABYMONSTER"
   },
   {
-    src: "https://kpopping.com/documents/60/5/BADVILLAIN-fullPicture(10).webp",
-    caption: "BADVILLAIN"
+    src: "https://assets.teenvogue.com/photos/6a8c42d8a80ddb941c41b72e/4:3/w_3600,h_2700,c_limit/WE%20PLAY_TUIDE%2004.jpg",
+    caption: "Tuide"
   },
   {
     src: "https://thebiaslist.com/wp-content/uploads/2022/03/red-velvet-feel-my-rhythm.jpg",
     caption: "Red Velvet"
   },
   {
-    src: "https://kpopping.com/documents/da/1/1200/Hearts2Hearts-fullPicture(11).webp",
+    src: "https://www.hollywoodreporter.com/wp-content/uploads/2026/02/H2H.jpg?w=2000&h=1126&crop=1",
     caption: "Hearts2Hearts"
   },
   {
     src: "https://www.nme.com/wp-content/uploads/2025/07/rescene-dearest-interview-credit-the-muze-entertainment-image1.jpg",
     caption: "RESCENE"
+  },
+  {
+    src: "https://cdn.kpopping.com/kpics/2026/06/1782501476588-jo2gpd-0.jpg",
+    caption: "Baby Don't Cry"
+  },
+  {
+    src: "https://www.katseye.world/wp-content/uploads/sites/2863/2024/06/06.25.Katseye_slide01-compressed.jpg",
+    caption: "Katseye"
+  },
+    {
+    src: "https://biasroomcdn.com/no-watermarked/haerisk/uploads/260818_kiiikiii_twitter_update_mszbmmlo_j146f9.jpg",
+    caption: "KiiiKiii"
   }
 ];
 

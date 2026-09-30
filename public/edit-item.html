@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Edit Collection Item</title>
   <link rel="stylesheet" href="/css/theme.css">
+  <link rel="stylesheet" href="/css/museum.css">
   <link rel="stylesheet" href="/css/edit-item.css">
     <link rel="stylesheet" href="/css/navbar.css">
   <link rel="stylesheet" href="/css/header.css">
@@ -31,12 +32,77 @@
             <option value="album">Album / Merch</option>
         </select>
         </section>
-    <!-- Item selector -->
-    <section class="admin-section">
-      <label for="itemSelect">Select Item</label>
-      <select id="itemSelect">
-        <option value="">— Select an item —</option>
-      </select>
+    <!-- Album browser: search/filter + click a card to edit it -->
+    <section class="admin-section album-browser hidden" id="albumBrowserSection">
+      <label>Find an Album/Item to Edit</label>
+      <div class="controls">
+        <select id="editItemTypeFilter">
+          <option value="all">All Types</option>
+          <option value="standard cd">Standard CD</option>
+          <option value="standard cd nk">Standard CD Non-Korean</option>
+          <option value="limited cd">Limited CD</option>
+          <option value="japanese release">Japanese Release</option>
+          <option value="digital album">Digital Album</option>
+          <option value="vinyl">Vinyl</option>
+          <option value="cassette">Cassette</option>
+          <option value="bimae">Promo/NFS</option>
+          <option value="gold sticker">Gold KOMCA</option>
+          <option value="merch">Merch/Special</option>
+          <option value="standard dvd">Standard DVD</option>
+          <option value="standard bluray">Standard Bluray</option>
+        </select>
+        <select id="editItemGroupFilter">
+          <option value="all">All Artists</option>
+        </select>
+        <select id="editItemRegionFilter">
+          <option value="all">All Regions</option>
+        </select>
+        <input
+          type="number"
+          id="editItemIdSearch"
+          placeholder="Search album by ID..."
+          class="search-input"
+        />
+        <input
+          type="text"
+          id="editItemNameSearch"
+          placeholder="Search album/item name..."
+          class="search-input"
+        >
+      </div>
+      <div id="editItemsGrid" class="museum-grid"></div>
+    </section>
+
+    <!-- Photocard browser: search/filter + click a card to edit it -->
+    <section class="admin-section photocard-browser hidden" id="photocardBrowserSection">
+      <label>Find a Photocard to Edit</label>
+      <div class="controls">
+        <select id="editPcGroupFilter">
+          <option value="all">All Groups</option>
+        </select>
+        <select id="editPcMemberFilter">
+          <option value="all">All Members</option>
+        </select>
+        <select id="editPcEraFilter">
+          <option value="all">All Eras</option>
+        </select>
+        <select id="editPcRegionFilter">
+          <option value="all">All Regions</option>
+        </select>
+        <input
+          type="number"
+          id="editPcIdSearch"
+          placeholder="Search photocard by ID..."
+          class="search-input"
+        />
+        <input
+          type="text"
+          id="editPcNameSearch"
+          placeholder="Search era, outfit, version..."
+          class="search-input"
+        >
+      </div>
+      <div id="editPhotocardsGrid" class="museum-grid"></div>
     </section>
 
     <!-- Edit form -->
@@ -69,6 +135,16 @@
       <label>Outfit / Concept <input name="outfit" placeholder="e.g. Superbeing"></label>
       <label>Variant <span class="hint">(optional)</span><input name="variant" placeholder="e.g. Ver. A"></label>
       <label>Format <span class="hint">(optional)</span><input name="format" placeholder="e.g. Lenticular"></label>
+      <label>Region <span class="hint">(optional)</span>
+        <select name="region">
+          <option value="">Select region</option>
+          <option value="korea">Korea</option>
+          <option value="japan">Japan</option>
+          <option value="china">China</option>
+          <option value="us">US</option>
+          <option value="europe">Europe</option>
+        </select>
+      </label>
       <label>Rarity <select name="pc_rarity">
         <option value="bronze">Bronze</option> <!--Standard Album Inclusions-->
           <option value="silver">Silver</option> <!--Common POBs, Merch Limited PCs, Limited Album PCs-->
@@ -102,6 +178,16 @@
       <label>Publishing Label <input name="publishing_label"></label>
       <label>KOMCA Number <input name="komca_number"></label>
       <label>Release Date <input type="date" name="release_date"></label>
+      <label>Region <span class="hint">(optional)</span>
+        <select name="region">
+          <option value="">Select region</option>
+          <option value="korea">Korea</option>
+          <option value="japan">Japan</option>
+          <option value="china">China</option>
+          <option value="us">US</option>
+          <option value="europe">Europe</option>
+        </select>
+      </label>
       <label>Item Type <select name="item_type">
         <option value="standard cd">Standard CD</option>
         <option value="standard cd nk">Standard CD Non-Korean</option>
@@ -138,6 +224,7 @@
     </form>
 
 
+  <script src="/js/photocard-utils.js"></script>
   <script src="/js/edit-item.js"></script>
 </body>
 </html>

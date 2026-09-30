@@ -11,6 +11,7 @@ const tabContents = document.querySelectorAll(".tab-content");
 const albumFilterState = {
   item_type: "all",
   artist_name: "all",
+  region: "all",
   nameSearch: ""
 };
 
@@ -18,6 +19,7 @@ const photocardFilterState = {
   artist_name: "all",
   member: "all",
   era: "all",
+  region: "all",
   nameSearch: ""
 };
 
@@ -25,22 +27,12 @@ let itemIdSearchTerm = "";
 let pcIdSearchTerm = "";
 
 // -------------------------
-//formatting for item information
+// formatLabel / getRarityClass / buildPhotocardLabel now live in
+// photocard-utils.js (shared with edit-item.js's picker) — see that file.
 // -------------------------
-function formatLabel(value) {
-  if (!value) return "";
-  return value
-    .replace(/_/g, " ")                 // underscores → spaces
-    .replace(/\b\w/g, char => char.toUpperCase()); // capitalize first letter of each word
-}
 
 function formatRarity(tier) {
   return tier.charAt(0).toUpperCase() + tier.slice(1);
-}
-
-function getRarityClass(rarity) {
-  if (!rarity) return "rarity-unknown";
-  return `rarity-${rarity.toLowerCase()}`;
 }
 
 // -------------------------
@@ -168,6 +160,7 @@ let allItems = [];
 
 function populateItemFilters() {
   const groupSelect = document.getElementById("itemGroupFilter");
+  const regionSelect = document.getElementById("itemRegionFilter");
 
   groupSelect.innerHTML = `<option value="all">All Artists</option>`;
 
@@ -180,6 +173,12 @@ function populateItemFilters() {
   groups.forEach(g => {
     groupSelect.appendChild(new Option(g, g));
   });
+
+  if (regionSelect) {
+    regionSelect.innerHTML = `<option value="all">All Regions</option>`;
+    const regions = [...new Set(allItems.map(i => i.region).filter(Boolean))].sort();
+    regions.forEach(r => regionSelect.appendChild(new Option(formatLabel(r), r)));
+  }
 }
 
 function renderItems(items) {
@@ -216,6 +215,7 @@ function renderItems(items) {
           </span>
         </div>
         <div><span>Release Date</span><span>${item.release_date || "Unknown"}</span></div>
+        <div><span>Region</span><span>${formatLabel(item.region) || "Unknown"}</span></div>
         <div>
           <span>Rarity</span>
           <span>${formatLabel(item.item_rarity) || "Unknown"}</span>
@@ -249,6 +249,14 @@ document.getElementById("itemGroupFilter").addEventListener("change", e => {
   applyItemFilters();
 });
 
+const itemRegionFilterEl = document.getElementById("itemRegionFilter");
+if (itemRegionFilterEl) {
+  itemRegionFilterEl.addEventListener("change", e => {
+    albumFilterState.region = e.target.value;
+    applyItemFilters();
+  });
+}
+
 document.getElementById("itemIdSearch").addEventListener("input", e => {
   itemIdSearchTerm = e.target.value.trim();
   applyItemFilters();
@@ -276,9 +284,16 @@ function applyItemFilters() {
     );
   }
 
+  if (albumFilterState.region !== "all") {
+    filtered = filtered.filter(item =>
+      item.region?.toLowerCase() === albumFilterState.region.toLowerCase()
+    );
+  }
+
   if (itemIdSearchTerm !== "") {
     albumFilterState.item_type = "all";
     albumFilterState.artist_name = "all";
+    albumFilterState.region = "all";
     filtered = filtered.filter(item =>
       String(item.id) === itemIdSearchTerm
     );
@@ -288,7 +303,8 @@ function applyItemFilters() {
 
     filtered = filtered.filter(item =>
       item.item_name?.toLowerCase().includes(search) ||
-      item.artist_name?.toLowerCase().includes(search)
+      item.artist_name?.toLowerCase().includes(search) ||
+      item.region?.toLowerCase().includes(search)
     );
   }
 
@@ -305,46 +321,17 @@ function populatePhotocardFilters() {
   const groupSelect = document.getElementById("pcGroupFilter");
   const memberSelect = document.getElementById("pcMemberFilter");
   const eraSelect = document.getElementById("pcEraFilter");
+  const regionSelect = document.getElementById("pcRegionFilter");
 
   const groups = [...new Set(allPhotocards.map(p => p.artist_name))].sort();
   const members = [...new Set(allPhotocards.map(p => p.member))].sort();
   const eras = [...new Set(allPhotocards.map(p => p.era).filter(Boolean))].sort();
+  const regions = [...new Set(allPhotocards.map(p => p.region).filter(Boolean))].sort();
 
   groups.forEach(g => groupSelect.appendChild(new Option(g, g)));
   members.forEach(m => memberSelect.appendChild(new Option(m, m)));
   if (eraSelect) eras.forEach(e => eraSelect.appendChild(new Option(e, e)));
-}
-
-// -------------------------
-// builds the composed "Era — Variant (Format) — Outfit" label
-// falls back to the old free-text version for cards that haven't
-// been backfilled with era/outfit yet, and flags them as legacy
-// -------------------------
-function buildPhotocardLabel(pc) {
-  const hasNewFields = pc.era || pc.outfit || pc.variant || pc.format;
-
-  if (!hasNewFields) {
-    return {
-      label: pc.pc_version ? formatLabel(pc.pc_version) : "Unknown",
-      legacy: true
-    };
-  }
-
-  let variantFormat = null;
-  if (pc.variant && pc.format) {
-    variantFormat = `${pc.variant} (${pc.format})`;
-  } else if (pc.variant) {
-    variantFormat = pc.variant;
-  } else if (pc.format) {
-    variantFormat = pc.format;
-  }
-
-  const parts = [pc.era, variantFormat, pc.outfit].filter(Boolean);
-
-  return {
-    label: parts.length ? parts.join(" — ") : "Unknown",
-    legacy: false
-  };
+  if (regionSelect) regions.forEach(r => regionSelect.appendChild(new Option(formatLabel(r), r)));
 }
 
 function renderPhotocards(cards) {
@@ -409,6 +396,7 @@ function renderPhotocards(cards) {
 
       <div class="text-meta">
         <div><span>Source</span><span>${formatLabel(pc.pc_source) || "Unknown"}</span></div>
+        <div><span>Region</span><span>${formatLabel(pc.region) || "Unknown"}</span></div>
         <div><span>Trade Value</span><span class="highlight">${pc.trade_value || "Unknown"}</span></div>
         <div><span>Condition</span><span>${formatLabel(pc.condition) || "Unknown"}</span></div>
         <div><span>Purchase</span><span>${pc.purchase_location || "Unknown"}</span></div>
@@ -450,6 +438,14 @@ const pcEraFilterEl = document.getElementById("pcEraFilter");
 if (pcEraFilterEl) {
   pcEraFilterEl.addEventListener("change", e => {
     photocardFilterState.era = e.target.value;
+    applyPhotocardFilters();
+  });
+}
+
+const pcRegionFilterEl = document.getElementById("pcRegionFilter");
+if (pcRegionFilterEl) {
+  pcRegionFilterEl.addEventListener("change", e => {
+    photocardFilterState.region = e.target.value;
     applyPhotocardFilters();
   });
 }
@@ -497,10 +493,17 @@ function applyPhotocardFilters() {
     );
   }
 
+  if (photocardFilterState.region !== "all") {
+    filtered = filtered.filter(pc =>
+      pc.region?.toLowerCase() === photocardFilterState.region.toLowerCase()
+    );
+  }
+
   if (pcIdSearchTerm !== "") {
     photocardFilterState.artist_name = "all";
     photocardFilterState.member = "all";
     photocardFilterState.era = "all";
+    photocardFilterState.region = "all";
     filtered = filtered.filter(pc =>
       String(pc.id) === pcIdSearchTerm
     );
@@ -515,7 +518,8 @@ function applyPhotocardFilters() {
       pc.era?.toLowerCase().includes(search) ||
       pc.outfit?.toLowerCase().includes(search) ||
       pc.variant?.toLowerCase().includes(search) ||
-      pc.format?.toLowerCase().includes(search)
+      pc.format?.toLowerCase().includes(search) ||
+      pc.region?.toLowerCase().includes(search)
     );
   }
 

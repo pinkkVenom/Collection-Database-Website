@@ -156,7 +156,7 @@ app.post(
   (req, res) => {
   const {
     item_type, item_name, artist_name, pb_label,
-    komca_number, release_date, item_rarity, purchase_location, condition, est_marketprice, notes, image_front
+    komca_number, release_date, item_rarity, purchase_location, condition, est_marketprice, notes, image_front, region
   } = req.body;
 
   const frontPath = req.file
@@ -167,11 +167,11 @@ app.post(
     `
     INSERT INTO ownedItems
     (item_type, item_name, artist_name, publishing_label, komca_number, release_date, item_rarity, purchase_location,
-    condition, est_marketprice, notes, image_front_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    condition, est_marketprice, notes, region, image_front_url)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
     [item_type, item_name, artist_name, pb_label, komca_number, release_date,
-     item_rarity, purchase_location, condition, est_marketprice, notes, frontPath],
+     item_rarity, purchase_location, condition, est_marketprice, notes, region, frontPath],
     () => res.json({ success: true })
   );
 });
@@ -185,7 +185,7 @@ app.post(
   (req, res) => {
   const {
     artist_name, member, pc_source, pc_version,
-    era, outfit, variant, format,
+    era, outfit, variant, format, region,
     pc_rarity, purchase_location, condition, trade_value, notes, image_front, image_back
   } = req.body;
 
@@ -204,11 +204,11 @@ app.post(
   db.run(
     `
     INSERT INTO ownedPhotocards
-    (artist_name, member, pc_source, pc_version, era, outfit, variant, format, pc_rarity,
+    (artist_name, member, pc_source, pc_version, era, outfit, variant, format, region, pc_rarity,
      purchase_location, condition, trade_value, notes, image_front_url, image_back_url)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `,
-    [artist_name, member, pc_source, pc_version, era, outfit, variant, format,
+    [artist_name, member, pc_source, pc_version, era, outfit, variant, format, region,
      pc_rarity, purchase_location, condition, trade_value, notes, frontPath, backPath],
     () => res.json({ success: true })
   );
@@ -334,6 +334,7 @@ db.get(
       outfit: req.body.outfit || existingCard.outfit,
       variant: req.body.variant || existingCard.variant,
       format: req.body.format || existingCard.format,
+      region: req.body.region || existingCard.region,
       pc_rarity: req.body.pc_rarity || existingCard.pc_rarity,
       purchase_location: req.body.purchase_location || existingCard.purchase_location,
       condition: req.body.condition || existingCard.condition,
@@ -355,6 +356,7 @@ db.get(
         outfit = ?,
         variant = ?,
         format = ?,
+        region = ?,
         pc_rarity = ?,
         purchase_location = ?,
         condition = ?,
@@ -373,6 +375,7 @@ db.get(
         updated.outfit,
         updated.variant,
         updated.format,
+        updated.region,
         updated.pc_rarity,
         updated.purchase_location,
         updated.condition,
@@ -438,6 +441,7 @@ const imagePath = file
           condition = ?,
           est_marketprice = ?,
           notes = ?,
+          region = ?,
           image_front_url = ?
         WHERE id = ?
         `,
@@ -453,6 +457,7 @@ const imagePath = file
           req.body.condition,
           req.body.est_marketprice,
           req.body.notes,
+          req.body.region,
           imagePath,
           id
         ],
