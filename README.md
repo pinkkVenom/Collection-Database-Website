@@ -27,7 +27,8 @@ that process.
 ## How I used AI
 I used AI tools to help solve coding problems, generate code, and explain what
 it produced. I then reviewed and debugged the output myself to build my own
-skills in reading code and finding errors.
+skills in reading code and finding errors. I used GPT-4 and 5, as well as
+Claude.ai.
 
 ## Roadmap
 - Support multiple images per item (currently one image per item)
